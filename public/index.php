@@ -6,11 +6,14 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 
 require __DIR__.'/../vendor/autoload.php';
 
+define('ROOT_DIR', dirname(__DIR__));
+
 $psr17Factory = new Psr17Factory();
 $creator = new ServerRequestCreator($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
 $request = $creator->fromGlobals();
 $response = new Response();
 
+$middlewares[] = new \App\Middleware\Cache();
 $middlewares[] = new \App\Middleware\Router();
 
 $runner = (new \Relay\RelayBuilder())->newInstance($middlewares);

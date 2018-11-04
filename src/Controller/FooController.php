@@ -11,6 +11,6 @@ class FooController
 {
     public function run(RequestInterface $request)
     {
-        return new Response(200, [], 'Foo page');
+        return new Response(200, [], 'Foo page ' . mt_rand(1, 100));
     }
 }
