@@ -9,13 +9,5 @@ require __DIR__.'/../vendor/autoload.php';
 $psr17Factory = new Psr17Factory();
 $creator = new ServerRequestCreator($psr17Factory, $psr17Factory, $psr17Factory, $psr17Factory);
 $request = $creator->fromGlobals();
-$response = new Response();
 
-$middlewares[] = new \App\Middleware\Cache();
-$middlewares[] = new \App\Middleware\Router();
-
-$runner = (new \Relay\RelayBuilder())->newInstance($middlewares);
-$response = $runner($request, $response);
-
-// Send response
-echo $response->getBody();
+(new \App\Kernel())->handle($request);

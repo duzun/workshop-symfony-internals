@@ -1,0 +1,6 @@
+# parameters:
+#     mailer.transport: sendmail
+
+services:
+    router:
+        class:     App\Router
