@@ -1,0 +1,7 @@
+{
+    "require": {
+        "nyholm/psr7": "^1.0",
+        "zendframework/zend-httphandlerrunner": "^1.0",
+        "nyholm/psr7-server": "^0.3.0"
+    }
+}
