@@ -18,6 +18,9 @@ class Router implements MiddlewareInterface
             case '/foo':
                 $response = (new \App\Controller\FooController())->run($request);
                 break;
+            case '/admin':
+                $response = (new \App\Controller\AdminController())->run($request);
+                break;
             default:
                 $response = $response->withStatus(404);
                 $response->getBody()->write('Not Found');

@@ -36,6 +36,7 @@ class Kernel
     {
         $this->boot();
 
+        $middlewares[] = new \App\Middleware\Security();
         $middlewares[] = $this->container->get('middleware.cache');
         $middlewares[] = new \App\Middleware\Router();
 
