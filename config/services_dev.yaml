@@ -3,4 +3,5 @@
 
 services:
     router:
-        class:     App\Router
+        class:     App\Middleware\Router
+        public: true

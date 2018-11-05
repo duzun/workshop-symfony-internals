@@ -13,26 +13,46 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class Kernel {
 
+	public $env;
+	public $debug;
+
+	public function __construct($env='prod', $debug=false) {
+	    $this->env = $env;
+	    $this->debug = $debug;
+	}
+
 	public function handle(RequestInterface $request): ResponseInterface {
-	    
-		$containerBuilder = new ContainerBuilder();
-		$loader = new YamlFileLoader($containerBuilder, new FileLocator(__DIR__ . '/../config/'));
-		$server = $request->getServerParams();
-		$loader->load('services.'.(getenv('PHP_ENV') ?: getenv('ENV')).'.yaml');
+	    $container = $this->getContainer();
 
-	    $response = new Response();
+		try {
+			$middlewares[] = $container->get('cache');
+		} catch(\Throwable $ex) {}
+		$middlewares[] = $container->get('router');
 
-		// $middlewares[] = new \App\Middleware\Cache();
-		// $middlewares[] = new \App\Middleware\Router();
-
-		$runner = (new \Relay\RelayBuilder($loader->getResolver()))->newInstance(/*$middlewares*/);
-		$response = $runner($request, $response);
-
-		// Send response
-		$response = (new Psr17Factory())->createReponse('200', 'Hello world');
-		(new \Zend\HttpHandlerRunner\Emitter\SapiEmitter())->emit($response);
+		$runner = (new \Relay\RelayBuilder())->newInstance($middlewares);
+		$response = $runner($request, new Response());
 
 		return $response;
 	}
+
+	public function getContainer() {
+		$container = new ContainerBuilder();
+ 		$container->setParameter('kernel.project_dir', $this->getProjectDir());
+        $container->setParameter('kernel.environment', $this->env);		
+		$loader = new YamlFileLoader($container, new FileLocator($this->getProjectDir() . '/config/'));
+
+		try {
+			$loader->load('services.yaml');
+			$loader->load('service_'.$this->env.'.yaml');
+		} catch(\Throwable $ex){}
+
+		$container->compile();
+
+		return $container;
+	}
+
+	private function getProjectDir() {
+        return dirname(__DIR__);
+    }
 }
 ?>

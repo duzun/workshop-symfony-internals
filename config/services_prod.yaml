@@ -1,0 +1,10 @@
+# parameters:
+#     mailer.transport: sendmail
+
+services:
+    cache:
+        class:     App\Middleware\Cache
+        public: true
+    router:
+        class:     App\Middleware\Router
+        public: true
