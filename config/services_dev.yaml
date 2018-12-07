@@ -1,3 +1,8 @@
 services:
   cache:
-    alias: cache.void
+    alias: cache.collector
+    
+  middleware.toolbar:
+    class: App\Middleware\Toolbar
+    arguments: ['@cache']
+    public: true

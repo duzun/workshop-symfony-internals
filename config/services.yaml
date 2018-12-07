@@ -5,6 +5,10 @@ services:
   cache.void:
     class: Cache\Adapter\Void\VoidCachePool
 
+  cache.collector:
+    class: App\Tools\CacheDataCollector
+    arguments: ['@cache.void']
+
   cache.filesystem:
     class: Cache\Adapter\Filesystem\FilesystemCachePool
     arguments: ['@flysystem.filesystem']
